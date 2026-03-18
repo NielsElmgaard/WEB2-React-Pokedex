@@ -1,5 +1,7 @@
 import useFetchAll from "./useFetchAll.jsx";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import useSound from "use-sound";
+import hoverSound from "./shiny_8.mp3";
 import useFetchPokemon from "./useFetchPokemon.jsx";
 
 function Home() {
@@ -52,6 +54,23 @@ function Home() {
 
 function PokemonCard({ id, name }) {
   const [pokemon] = useFetchPokemon(`https://pokeapi.co/api/v2/pokemon/${id}`);
+  const [play, { stop }] = useSound(hoverSound, {
+    volume: 0.5,
+  });
+  const timerRef = useRef(null);
+
+  const handleMouseEnter = () => {
+    timerRef.current = setTimeout(() => {
+      play();
+    }, 300);
+  };
+
+  const handleMouseLeave = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+    stop();
+  };
 
   if (!pokemon) {
     return <div className="pokemon-card-container">Loading...</div>;
@@ -60,7 +79,12 @@ function PokemonCard({ id, name }) {
   const type = pokemon?.types?.[0]?.type?.name || "normal";
 
   return (
-    <div className="pokemon-card-container" style={getPokemonCardStyle(type)}>
+    <div
+      className="pokemon-card-container"
+      style={getPokemonCardStyle(type)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <p className="pokemon-id">#{id}</p>
       <div className="pokeImg-container">
         <PokemonImage id={id} />
@@ -96,13 +120,7 @@ function PokemonImage({ id }) {
     }
   };
 
-  return (
-    <img
-      src={imgSrc}
-      onError={handleNotGif}
-      alt={`Pokemon ${id}`}
-    />
-  );
+  return <img src={imgSrc} onError={handleNotGif} alt={`Pokemon ${id}`} />;
 }
 
 function getPokemonCardStyle(type) {
