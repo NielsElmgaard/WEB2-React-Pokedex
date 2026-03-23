@@ -71,7 +71,7 @@
 
 /*https://prismic.io/blog/css-hover-effects*/
 .pokemon-card-container {
-  min-height: 330px;
+  min-height: 345px;
   margin: 10px;
   border-radius: 15px;
   padding: 20px;
@@ -127,6 +127,7 @@
 
 .pokeImg-container img {
   transition: opacity 0.3s ease-in-out;
+  width: 100%;
 }
 
 .pokemon-card-container:hover .pokeImg {

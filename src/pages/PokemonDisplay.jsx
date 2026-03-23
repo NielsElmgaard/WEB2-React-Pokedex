@@ -1,7 +1,5 @@
-import useFetchPokemon from "./useFetchPokemon.jsx";
+import useFetchPokemon from "../hooks/useFetchPokemon.jsx";
 
-function PokemonDisplay(){
-
-}
+function PokemonDisplay() {}
 
 export default PokemonDisplay;

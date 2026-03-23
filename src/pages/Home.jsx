@@ -1,15 +1,15 @@
-import useFetchAll from "./useFetchAll.jsx";
+import useFetchAll from "../hooks/useFetchAll.jsx";
 import { useState, useRef } from "react";
 import useSound from "use-sound";
-import hoverSound from "./shiny_8.mp3";
-import useFetchPokemon from "./useFetchPokemon.jsx";
+import hoverSound from "../assets/shiny_8.mp3";
+import useFetchPokemon from "../hooks/useFetchPokemon.jsx";
 
 function Home() {
   const [pokemons] = useFetchAll(
     "https://pokeapi.co/api/v2/pokemon?limit=1350",
   );
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 20;
+  const itemsPerPage = 10;
 
   const totalPages = Math.ceil((pokemons?.length || 0) / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -102,25 +102,24 @@ function PokemonCard({ id, name }) {
 }
 
 function PokemonImage({ id }) {
-  const [imgSrc, setImgSrc] = useState(
-    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${id}.gif`,
-  );
-  const [isPng, setIsPng] = useState(false);
+  const [index, setIndex] = useState(0);
+  const imgSources = [
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/brilliant-diamond-shining-pearl/${id}.png`,
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`,
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`,
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ix/scarlet-violet/${id}.png`,
+    `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-VNUKqthEaH3XaAC1qmfuHrvjbXfaI33S-Q&s`,
+  ];
 
-  const handleNotGif = () => {
-    if (!isPng) {
-      setImgSrc(
-        `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
-      );
-      setIsPng(true);
-    } else {
-      setImgSrc(
-        "https://t4.ftcdn.net/jpg/17/64/04/87/360_F_1764048718_QXL08Lw6o39Xcvu5X9r2qI0yH4onPB3p.jpg",
-      );
+  const handleError = () => {
+    if (index < imgSources.length - 1) {
+      setIndex(index + 1);
     }
   };
 
-  return <img src={imgSrc} onError={handleNotGif} alt={`Pokemon ${id}`} />;
+  return (
+    <img src={imgSources[index]} onError={handleError} alt={`Pokemon ${id}`} />
+  );
 }
 
 function getPokemonCardStyle(type) {
