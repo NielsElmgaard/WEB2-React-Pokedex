@@ -3,6 +3,8 @@ import { useState, useRef } from "react";
 import useSound from "use-sound";
 import hoverSound from "../assets/shiny_8.mp3";
 import useFetchPokemon from "../hooks/useFetchPokemon.jsx";
+import PokemonDisplay from "./PokemonDisplay.jsx";
+import PokemonImage from "../components/PokemonImage.jsx";
 
 function Home() {
   const [pokemons] = useFetchAll(
@@ -16,13 +18,36 @@ function Home() {
   const endIndex = startIndex + itemsPerPage;
   const currentItems = pokemons?.slice(startIndex, endIndex) || [];
 
+  const [currentPokemon, setCurrentPokemon] = useState(null);
+
+  // PokemonDisplay page
+  // Go back to home -> SetCurrentPokemon to null
+  if (currentPokemon) {
+    return (
+      <div id="back-button-container">
+        <div id="back-button-row">
+          <button onClick={() => setCurrentPokemon(null)}>Go Back</button>
+        </div>
+        <PokemonDisplay selectedPokemon={currentPokemon} />
+      </div>
+    );
+  }
+
+  // Pokemon Grid List
   return (
     <>
       <div className="pokemon-container">
         {currentItems.map((pokemon) => {
           const parts = pokemon.url.split("/");
           const id = parts[parts.length - 2];
-          return <PokemonCard key={id} id={id} name={pokemon.name} />;
+          return (
+            <PokemonCard
+              key={id}
+              id={id}
+              name={pokemon.name}
+              onClick={() => setCurrentPokemon(pokemon)}
+            />
+          );
         })}
       </div>
 
@@ -52,7 +77,7 @@ function Home() {
   );
 }
 
-function PokemonCard({ id, name }) {
+function PokemonCard({ id, name, onClick }) {
   const [pokemon] = useFetchPokemon(`https://pokeapi.co/api/v2/pokemon/${id}`);
   const [play, { stop }] = useSound(hoverSound, {
     volume: 0.5,
@@ -84,6 +109,7 @@ function PokemonCard({ id, name }) {
       style={getPokemonCardStyle(type)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick={onClick}
     >
       <p className="pokemon-id">#{id}</p>
       <div className="pokeImg-container">
@@ -98,27 +124,6 @@ function PokemonCard({ id, name }) {
         </p>
       </div>
     </div>
-  );
-}
-
-function PokemonImage({ id }) {
-  const [index, setIndex] = useState(0);
-  const imgSources = [
-    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/brilliant-diamond-shining-pearl/${id}.png`,
-    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`,
-    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`,
-    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ix/scarlet-violet/${id}.png`,
-    `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-VNUKqthEaH3XaAC1qmfuHrvjbXfaI33S-Q&s`,
-  ];
-
-  const handleError = () => {
-    if (index < imgSources.length - 1) {
-      setIndex(index + 1);
-    }
-  };
-
-  return (
-    <img src={imgSources[index]} onError={handleError} alt={`Pokemon ${id}`} />
   );
 }
 
