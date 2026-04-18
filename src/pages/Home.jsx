@@ -5,8 +5,14 @@ import hoverSound from "../assets/shiny_8.mp3";
 import useFetchPokemon from "../hooks/useFetchPokemon.jsx";
 import PokemonDisplay from "./PokemonDisplay.jsx";
 import PokemonImage from "../components/PokemonImage.jsx";
+import { useQuery } from '@tanstack/react-query';
+
 
 function Home() {
+
+  const { data, error, isLoading } = useQuery(['users'], useFetchAll(
+    "https://pokeapi.co/api/v2/pokemon?limit=1350",
+  ));
   const [pokemons] = useFetchAll(
     "https://pokeapi.co/api/v2/pokemon?limit=1350",
   );
