@@ -302,3 +302,9 @@
   font-weight: 600;
   font-family: sans-serif;
 }
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

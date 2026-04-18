@@ -1,30 +1,54 @@
 import useFetchAll from "../hooks/useFetchAll.jsx";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import useSound from "use-sound";
 import hoverSound from "../assets/shiny_8.mp3";
 import useFetchPokemon from "../hooks/useFetchPokemon.jsx";
 import PokemonDisplay from "./PokemonDisplay.jsx";
 import PokemonImage from "../components/PokemonImage.jsx";
-import { useQuery } from '@tanstack/react-query';
-
+import { useQueryClient } from "@tanstack/react-query";
 
 function Home() {
-
-  const { data, error, isLoading } = useQuery(['users'], useFetchAll(
-    "https://pokeapi.co/api/v2/pokemon?limit=1350",
-  ));
-  const [pokemons] = useFetchAll(
-    "https://pokeapi.co/api/v2/pokemon?limit=1350",
-  );
+  const { isPending, error, data } = useFetchAll();
+  const queryClient = useQueryClient();
+  const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
-  const totalPages = Math.ceil((pokemons?.length || 0) / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = pokemons?.slice(startIndex, endIndex) || [];
-
   const [currentPokemon, setCurrentPokemon] = useState(null);
+
+  const pokemonPerPage = 10;
+
+  const filteredData = data?.filter((p) => {
+    if (search === "") {
+      return p;
+    }
+    return p.name.toLowerCase().includes(search.toLowerCase());
+  });
+
+  const totalPages = Math.ceil((filteredData?.length || 0) / pokemonPerPage);
+  const startIndex = (currentPage - 1) * pokemonPerPage;
+  const endIndex = startIndex + pokemonPerPage;
+  const currentItems = filteredData?.slice(startIndex, endIndex) || [];
+
+  useEffect(() => {
+    if (currentPage < totalPages) {
+      const nextPageItems = filteredData.slice(
+        currentPage * pokemonPerPage,
+        (currentPage + 1) * pokemonPerPage,
+      );
+
+      nextPageItems.forEach((p) => {
+        const parts = p.url.split("/");
+        const id = parts[parts.length - 2];
+        queryClient.prefetchQuery({
+          queryKey: ["pokemon", id],
+          queryFn: () => fetch(p.url).then((res) => res.json()),
+          staleTime: 1000 * 60 * 5,
+        });
+      });
+    }
+  }, [currentPage, filteredData, queryClient]);
+
+  if (isPending) return "Loading...";
+  if (error) return "An error has occurred: " + error.message;
 
   // PokemonDisplay page
   // Go back to home -> SetCurrentPokemon to null
@@ -42,6 +66,18 @@ function Home() {
   // Pokemon Grid List
   return (
     <>
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search Pokemon..."
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setCurrentPage(1);
+          }}
+        />
+      </div>
+
       <div className="pokemon-container">
         {currentItems.map((pokemon) => {
           const parts = pokemon.url.split("/");
@@ -84,11 +120,18 @@ function Home() {
 }
 
 function PokemonCard({ id, name, onClick }) {
-  const [pokemon] = useFetchPokemon(`https://pokeapi.co/api/v2/pokemon/${id}`);
+  const { data: pokemon, isPending, error } = useFetchPokemon(id);
+
   const [play, { stop }] = useSound(hoverSound, {
     volume: 0.5,
   });
+
   const timerRef = useRef(null);
+
+  if (isPending) {
+    return <div className="pokemon-card-container">Loading...</div>;
+  }
+  if (error) return "An error has occurred: " + error.message;
 
   const handleMouseEnter = () => {
     timerRef.current = setTimeout(() => {
@@ -102,10 +145,6 @@ function PokemonCard({ id, name, onClick }) {
     }
     stop();
   };
-
-  if (!pokemon) {
-    return <div className="pokemon-card-container">Loading...</div>;
-  }
 
   const type = pokemon?.types?.[0]?.type?.name || "normal";
 

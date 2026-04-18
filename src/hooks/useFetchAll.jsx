@@ -1,13 +1,19 @@
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 
-async function useFetchAll(url) {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    await fetch(url)
-      .then((response) => response.json())
-      .then((data) => setData(data.results));
-  }, [url]);
-  return [data];
+function useFetchAll() {
+  return useQuery({
+    queryKey: ["pokemonData"],
+    queryFn: async () => {
+      const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1350");
+      if (!res.ok) {
+        throw new Error("Failed to fetch Pokémon data");
+      }
+      const json = await res.json()
+      return json.results;
+    },
+    staleTime: 1000 * 60 * 60,
+  });
 }
+
 export default useFetchAll;

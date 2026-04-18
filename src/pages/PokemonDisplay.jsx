@@ -18,9 +18,7 @@ function PokemonDisplay({ selectedPokemon }) {
   const parts = selectedPokemon.url.split("/");
   const id = parts[parts.length - 2];
 
-  const [pokemonDetails] = useFetchPokemon(
-    `https://pokeapi.co/api/v2/pokemon/${id}`,
-  );
+  const { data: pokemonDetails, isPending, error } = useFetchPokemon(id);
 
   const type = pokemonDetails?.types?.[0]?.type?.name || "normal";
 
@@ -45,11 +43,11 @@ function PokemonDisplay({ selectedPokemon }) {
 
   return (
     <div className="pokemon-card-display">
-      <img
+      <img fetchpriority="high"
         src={getPokemonTypeBackgroundImage(type)}
         className="pokemon-card-background"
       />
-      <img
+      <img fetchpriority="high"
         src={pokemonBackgroundLandscape}
         className="pokemon-card-background-landscape"
       />
