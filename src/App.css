@@ -307,4 +307,42 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 4px solid black;
+}
+
+.search-input {
+  width: 67%;
+  text-align: center;
+  font-weight: bold;
+  font-family: "PokemonFont", sans-serif;
+  letter-spacing: 1.5px;
+  padding: 5px;
+  margin-bottom: 7px;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.pagination-controls {
+  letter-spacing: 1.5px;
+}
+
+.pagination-controls,
+.pagination-controls button {
+  text-align: center;
+  font-family: "PokemonFont", sans-serif;
+  padding: 5px;
+  margin: 7px;
+}
+
+.go-to-page-container,
+.go-to-page-container input {
+  width: 120px;
+  text-align: center;
+  padding: 5px;
+  margin: 7px;
+  font-family: "PokemonFont", sans-serif;
 }

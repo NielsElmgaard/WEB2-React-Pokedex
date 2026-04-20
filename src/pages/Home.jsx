@@ -11,6 +11,7 @@ function Home() {
   const { isPending, error, data } = useFetchAll();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
+  const [goToPage, setGoToPage] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPokemon, setCurrentPokemon] = useState(null);
 
@@ -63,17 +64,72 @@ function Home() {
     );
   }
 
-  // Pokemon Grid List
+  function handleChange(e) {
+    const inputValue = e.target.value;
+    setGoToPage(inputValue);
+
+    if (inputValue !== "") {
+      const pageToGoTo = Math.max(1, Math.min(inputValue, totalPages)); // Ensure to not go over total pages or under page 1
+
+      if (pageToGoTo > 0) {
+        setGoToPage(pageToGoTo);
+      }
+      setCurrentPage(pageToGoTo);
+    }
+  }
+
+  // Pokemon List
   return (
     <>
+      <div className="pagination-container">
+        <div className="pagination-controls">
+          <button
+            onClick={() => {
+              const prevPage = Math.max(currentPage - 1, 1);
+              setCurrentPage(prevPage);
+              setGoToPage(prevPage);
+            }}
+            disabled={currentPage === 1}
+          >
+            Prev
+          </button>
+
+          <span>
+            Page {currentPage} of {totalPages}{" "}
+          </span>
+
+          <button
+            onClick={() => {
+              const nextPage = Math.min(currentPage + 1, totalPages);
+              setCurrentPage(nextPage);
+              setGoToPage(nextPage);
+            }}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
+
+        <div className="go-to-page-container">
+          <input
+            type="number"
+            placeholder="Go To Page..."
+            value={goToPage}
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+
       <div className="search-container">
         <input
+          className="search-input"
           type="text"
-          placeholder="Search Pokemon..."
+          placeholder="Search for Pokémon by name..."
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
             setCurrentPage(1);
+            setGoToPage("");
           }}
         />
       </div>
@@ -91,29 +147,6 @@ function Home() {
             />
           );
         })}
-      </div>
-
-      <div className="pagination-controls">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          Previous page
-        </button>
-
-        <span>
-          {" "}
-          Page {currentPage} of {totalPages}{" "}
-        </span>
-
-        <button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-          disabled={currentPage === totalPages}
-        >
-          Next page
-        </button>
       </div>
     </>
   );
