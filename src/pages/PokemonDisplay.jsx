@@ -20,6 +20,9 @@ function PokemonDisplay({ selectedPokemon }) {
 
   const { data: pokemonDetails, isPending, error } = useFetchPokemon(id);
 
+  if (isPending) return "Loading...";
+  if (error) return "An error has occurred: " + error.message;
+
   const type = pokemonDetails?.types?.[0]?.type?.name || "normal";
 
   const hp = pokemonDetails?.stats?.find(
@@ -41,26 +44,85 @@ function PokemonDisplay({ selectedPokemon }) {
     (s) => s.stat.name === "speed",
   )?.base_stat;
 
-  return (
-    <div className="pokemon-card-display">
-      <img fetchpriority="high"
-        src={getPokemonTypeBackgroundImage(type)}
-        className="pokemon-card-background"
-      />
-      <img fetchpriority="high"
-        src={pokemonBackgroundLandscape}
-        className="pokemon-card-background-landscape"
-      />
+  const maxStatValue = 200;
 
-      <h1 className="pokemon-display-name">{pokemonDetails?.name}</h1>
-      <div className="pokemon-display-image">
-        <PokemonImage id={id} />
+  const getStatColor = (value) => {
+    switch (true) {
+      case value < 30:
+        return "#F34444";
+      case value < 60:
+        return "#FF7F0F";
+      case value < 90:
+        return "#FFDD57";
+      case value < 120:
+        return "#A0E515";
+      case value < 150:
+        return "#23CD5E";
+      default:
+        return "#00C2B8";
+    }
+  };
+
+  const OtherStatsRow = ({ label, value, max }) => {
+    return (
+      <div className="stat-row">
+        <div className="other-stats-label-container">
+          <span className="stat-name">{label}</span>
+          <span className="stat-number">{value}</span>
+        </div>
+
+        <div className="stat-bar-container">
+          <div
+            className="stat-bar"
+            style={{
+              width: `${Math.min((value / max) * 100, 100)}%`,
+              backgroundColor: getStatColor(value),
+            }}
+          />
+        </div>
       </div>
-      <div className="pokemon-display-hp-stat">
-        <span className="hp-label">HP</span>
-        <span className="hp-value">{hp}</span>
+    );
+  };
+
+  return (
+    <>
+      <div className="pokemon-card-display">
+        <img
+          src={getPokemonTypeBackgroundImage(type)}
+          className="pokemon-card-background"
+        />
+        <img
+          src={pokemonBackgroundLandscape}
+          className="pokemon-card-background-landscape"
+        />
+
+        <h1 className="pokemon-display-name">{pokemonDetails?.name}</h1>
+        <div className="pokemon-display-image">
+          <PokemonImage id={id} />
+        </div>
+        <div className="pokemon-display-hp-stat">
+          <span className="hp-label">HP</span>
+          <span className="hp-value">{hp}</span>
+        </div>
+        <div className="pokemon-display-other-stats">
+          <h2 id="stats-header">
+            <u>Stats</u>
+          </h2>
+          <OtherStatsRow label={"ATK"} value={attack} max={maxStatValue} />
+          <OtherStatsRow
+            label={"SP.ATK"}
+            value={specialAttack}
+            max={maxStatValue}
+          />
+          <OtherStatsRow
+            label={"SP.DEF"}
+            value={specialDefense}
+            max={maxStatValue}
+          />
+          <OtherStatsRow label={"SPD"} value={speed} max={maxStatValue} />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

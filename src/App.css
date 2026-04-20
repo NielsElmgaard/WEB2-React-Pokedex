@@ -302,6 +302,59 @@
   font-weight: 600;
   font-family: sans-serif;
 }
+#stats-header {
+  color: black;
+  font-family: "PokemonFont", sans-serif;
+  font-size: 30px;
+  text-align: left;
+  margin-top: -7px;
+}
+
+.other-stats-label {
+  font-size: 15px;
+  font-weight: 600;
+  font-family: "PokemonFont", sans-serif;
+}
+
+.pokemon-display-other-stats {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  z-index: 3;
+  color: black;
+  top: 400px;
+  left: 50px;
+  letter-spacing: 3px;
+  width: 330px;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.other-stats-label-container {
+  display: flex;
+  justify-content: space-between;
+  width: 120px;
+  font-weight: bold;
+  font-family: "PokemonFont", sans-serif;
+}
+
+.stat-bar-container {
+  flex-grow: 1;
+  background-color: #e0e0e0;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.stat-bar {
+  height: 100%;
+  border-radius: 10px;
+}
 
 .search-container {
   display: flex;
@@ -345,4 +398,17 @@
   padding: 5px;
   margin: 7px;
   font-family: "PokemonFont", sans-serif;
+}
+
+.not-found-img {
+  max-width: 400px;
+  margin: auto;
+  aspect-ratio: 9 / 10;
+  background-color: #f0f0f0;
+}
+
+.not-found-img img {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
