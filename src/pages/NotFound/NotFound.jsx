@@ -1,4 +1,6 @@
-import pikaSad from "../assets/pikachu-sad.mp3";
+import pikaSad from "../../assets/pikachu-sad.mp3";
+
+import "./NotFound.css";
 
 function NotFound() {
   return (

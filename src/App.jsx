@@ -1,11 +1,11 @@
 import { Routes, Route, HashRouter } from "react-router-dom";
 import Header from "./components/Header";
-import Home from "./pages/Home";
-import About from "./pages/About";
+import Home from "./pages/Home/Home";
+import About from "./pages/About/About";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import "./App.css";
-import NotFound from "./pages/NotFound";
+import NotFound from "./pages/NotFound/NotFound";
 
 const queryClient = new QueryClient()
 

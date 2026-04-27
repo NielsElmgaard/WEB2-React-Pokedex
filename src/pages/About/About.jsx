@@ -1,4 +1,5 @@
-import pokemonVideo from "../assets/pokemon-intro.mp4";
+import pokemonVideo from "../../assets/pokemon-intro.mp4";
+import "./About.css";
 
 function About() {
   return (

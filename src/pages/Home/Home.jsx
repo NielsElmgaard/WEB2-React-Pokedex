@@ -1,11 +1,12 @@
-import useFetchAll from "../hooks/useFetchAll.jsx";
+import useFetchAll from "../../hooks/useFetchAll.jsx";
 import { useState, useRef, useEffect } from "react";
 import useSound from "use-sound";
-import hoverSound from "../assets/shiny_8.mp3";
-import useFetchPokemon from "../hooks/useFetchPokemon.jsx";
-import PokemonDisplay from "./PokemonDisplay.jsx";
-import PokemonImage from "../components/PokemonImage.jsx";
+import hoverSound from "../../assets/shiny_8.mp3";
+import useFetchPokemon from "../../hooks/useFetchPokemon.jsx";
+import PokemonDisplay from "../PokemonDisplay/PokemonDisplay.jsx";
+import PokemonImage from "../../components/PokemonImage.jsx";
 import { useQueryClient } from "@tanstack/react-query";
+import "./Home.css";
 
 function Home() {
   const { isPending, error, data } = useFetchAll();

@@ -1,18 +1,20 @@
-import useFetchPokemon from "../hooks/useFetchPokemon.jsx";
-import PokemonImage from "../components/PokemonImage.jsx";
-import pokemonCardColorless from "../assets/pokemon-cards/pokemon-card-colorless.png";
-import pokemonCardDarkness from "../assets/pokemon-cards/pokemon-card-darkness.png";
-import pokemonCardDragon from "../assets/pokemon-cards/pokemon-card-dragon.png";
-import pokemonCardFairy from "../assets/pokemon-cards/pokemon-card-fairy.png";
-import pokemonCardFighting from "../assets/pokemon-cards/pokemon-card-fighting.png";
-import pokemonCardFire from "../assets/pokemon-cards/pokemon-card-fire.png";
-import pokemonCardGrass from "../assets/pokemon-cards/pokemon-card-grass.png";
-import pokemonCardLightning from "../assets/pokemon-cards/pokemon-card-lightning.png";
-import pokemonCardMetal from "../assets/pokemon-cards/pokemon-card-metal.png";
-import pokemonCardPsychic from "../assets/pokemon-cards/pokemon-card-psychic.png";
-import pokemonCardWater from "../assets/pokemon-cards/pokemon-card-water.png";
+import useFetchPokemon from "../../hooks/useFetchPokemon.jsx";
+import PokemonImage from "../../components/PokemonImage.jsx";
+import pokemonCardColorless from "../../assets/pokemon-cards/pokemon-card-colorless.png";
+import pokemonCardDarkness from "../../assets/pokemon-cards/pokemon-card-darkness.png";
+import pokemonCardDragon from "../../assets/pokemon-cards/pokemon-card-dragon.png";
+import pokemonCardFairy from "../../assets/pokemon-cards/pokemon-card-fairy.png";
+import pokemonCardFighting from "../../assets/pokemon-cards/pokemon-card-fighting.png";
+import pokemonCardFire from "../../assets/pokemon-cards/pokemon-card-fire.png";
+import pokemonCardGrass from "../../assets/pokemon-cards/pokemon-card-grass.png";
+import pokemonCardLightning from "../../assets/pokemon-cards/pokemon-card-lightning.png";
+import pokemonCardMetal from "../../assets/pokemon-cards/pokemon-card-metal.png";
+import pokemonCardPsychic from "../../assets/pokemon-cards/pokemon-card-psychic.png";
+import pokemonCardWater from "../../assets/pokemon-cards/pokemon-card-water.png";
 
-import pokemonBackgroundLandscape from "../assets/pokemon-cards/pokemon-display-background-landscape.png";
+import pokemonBackgroundLandscape from "../../assets/pokemon-cards/pokemon-display-background-landscape.png";
+import "./PokemonDisplay.css";
+
 
 function PokemonDisplay({ selectedPokemon }) {
   const parts = selectedPokemon.url.split("/");
